@@ -37,11 +37,7 @@ function Serchsujjession(props) {
   
   return (
     <div className="popup_body">
-      {popup ? 
-      <Modal.Dialog>
-        
-
-        <Modal.Body>
+      
         {products.filter((val) => {
         if (products.length == '') {
           return val
@@ -49,20 +45,15 @@ function Serchsujjession(props) {
           return val
         }
       }).map((val, key) => {
-        return <div>
-          <span onClick={(val)=>{
+        return <div className='sugest_span' >
+          <span  onClick={(val)=>{
             setResult(val.name)
             return result
           }}>{val.name}</span>
           
         </div>
       })}
-        </Modal.Body>
-
-        
-      </Modal.Dialog>
-      : ''}
-
+       
     </div>
   )
   

@@ -1,4 +1,4 @@
-import React, { useContext,useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';
@@ -9,6 +9,8 @@ import SellButtonPlus from '../../assets/SellButtonPlus';
 import { AuthContext, FirebaseContext } from '../../Store/Context';
 import Serchsujjession from '../Popups/Serchsujjession';
 import { PostContext } from '../../Store/PostContext';
+import LoginPopup from '../Popups/LoginPopup';
+import ProfilePopup from '../Popups/ProfilePopup';
 
 
 function Header() {
@@ -16,24 +18,16 @@ function Header() {
   const { firebase } = useContext(FirebaseContext)
   const [serch, setSerch] = useState('')
   const history = useHistory()
-  const {setPostDetails}=useContext(PostContext)
- 
+  const { setPostDetails } = useContext(PostContext)
+  const [sugesion, setSugesion] = useState(false)
 
-  const serching=()=>{
-   
-    firebase.firestore().collection('products').get().then((querySnapshot) => {
-      const objectsArray = [];
-      querySnapshot.forEach((user) => {
-        objectsArray.push(user.data());
-      });
 
-      setPostDetails(objectsArray)
-    });
-  }
+
 
 
   return (
     <div className="headerParentDiv">
+
       <div className="headerChildDiv">
         <div className="brandName">
           <OlxLogo ></OlxLogo>
@@ -43,6 +37,8 @@ function Header() {
           <input placeholder='Serch location..' type="text" />
           <Arrow></Arrow>
         </div>
+
+
         <div className="productSearch">
           <div className="input">
             <input
@@ -51,31 +47,62 @@ function Header() {
 
               onChange={(e) => {
                 setSerch(e.target.value)
+                if (serch.length > 0) {
+                  setSugesion(true)
+                } else {
+                  setSugesion(false)
+                }
 
+              }}
+
+              onKeyPress={event => {
+                if (event.key === 'Enter') {
+                  if (serch.length > 0) {
+                    setPostDetails(serch)
+                    history.push('/serch')
+                  } else {
+                    alert('No Data Found')
+                  }
+                }
               }}
             />
 
-            <Serchsujjession data={serch} />
+            {sugesion && <Serchsujjession data={serch} />}
+
+
+
+
           </div>
-          <div className="searchAction" onClick={serching} >
+
+          <div className="searchAction" onClick={() => {
+            if (serch.length > 0) {
+              setPostDetails(serch)
+              history.push('/serch')
+            } else {
+              alert('No Data Found')
+            }
+
+          }} >
             <Search color="#ffffff"></Search>
+
           </div>
+
+
+
         </div>
         <div className="language">
           <span> ENGLISH </span>
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>{user ? `Welcome ${user.displayName}` : <span className='login_button' onClick={() => {
-            history.push('/login')
-          }}>Login</span>}</span>
-          <hr />
+          {user ? <ProfilePopup /> : <LoginPopup />}
+
 
         </div>
-        {user && <span onClick={() => {
-          firebase.auth().signOut()
-          history.push('/login')
-        }}>Logout</span>}
+        
+
+
+
         <div className="sellMenu">
           <SellButton></SellButton>
           <div className="sellMenuContent">
@@ -84,6 +111,11 @@ function Header() {
           </div>
         </div>
       </div>
+
+
+
+
+
     </div>
   );
 }

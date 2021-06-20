@@ -1,7 +1,14 @@
 .popup_body{
-    
-    margin-top: 1rem;
-    width: 100rem;
+    margin-top: 3rem;
+    width: 100%;
     
    
+}
+.sugest_span{
+    background-color:white;
+    border-width: 0.1px;
+    border-width: 1px;
+    border-style: solid;
+    
+    
 }

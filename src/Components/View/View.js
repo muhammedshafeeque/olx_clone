@@ -37,6 +37,7 @@ function View() {
           <p>Seller details</p>
           <p>{userDetails.username}</p>
           <p>{userDetails.phone}</p>
+          <button  >Call</button>
         </div>
         }
       </div>
